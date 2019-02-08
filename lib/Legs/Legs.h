@@ -1,3 +1,18 @@
+/*
+Copyright 2019 Eduardo S. Pereira
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 #include <Arduino.h>
 #include <Servo.h>
 #ifndef LEGS_H
@@ -101,6 +116,7 @@ private:
                         {120, 60,  60,  120, 30,  110, 110, 30},
                         {120, 60,  60,  120, 60,  130, 130, 60},
                     };
+
     int _right[5][8] = {//rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
                         {120, 30,  30,  120, 30,  130, 130, 30},
                         {120, 30,  30,  120, 90,  130, 130, 90},
