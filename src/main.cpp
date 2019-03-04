@@ -15,14 +15,22 @@ limitations under the License.
 */
 
 #include <Arduino.h>
+#include <SoftwareSerial.h>
 #include <Legs.h>
-#include <Ultrasonic.h>
-Ultrasonic ultrasonic(12,11);   // (Trig PIN,Echo PIN)
+#include <Velocity.h>
+
+//SoftwareSerial bluetooth(2, 13); // TX, RX (Bluetooth)
+int incomingByte;
+
+
+Velocity velocity(3, 4);   // (Trig PIN,Echo PIN)
+
 
 unsigned long t0;
 unsigned long delta_t=5000;
 boolean back = false;
 boolean left = false;
+boolean bye = false;
 
 float d0 = 0;
 float v0 = 0;
@@ -33,52 +41,65 @@ float seno;
 int frequencia;
 
 void setup() {
-    Serial.begin(9600);
-    legs.set_servos(10, 9, 8, 7, 6, 5, 4, 3);
+
+    legs.set_servos(4, 5, 8, 9, 2, 3, 6, 7);
     legs.zero_pos();
+
+    Serial.begin(9600);
+
+    //bluetooth.begin(9600);
     delay(1000);
     t0 = millis();
-    pinMode(13, OUTPUT);
+    pinMode(A0, OUTPUT);
     dt = millis();
+    velocity.average_distance_cm();
+    legs.set_current_state(FORWARD);
+
 }
 
 void loop() {
 
-    dt = (millis() - dt) / 1000.0;
-    v0 = (ultrasonic.Ranging(CM) - d0) / dt;
-    dt = millis();
-    d0 = ultrasonic.Ranging(CM);
+    Serial.println(legs.get_current_state());
 
-    Serial.print("Velo (cm/s): ");
-    Serial.println(v0);
+    /*
 
-    if(ultrasonic.Ranging(CM) < 10){
-        back = true;
-        t0 = millis();
-        tone(13, 440, 1000);
-        legs.bye_bye_right();
-
+    if(velocity.average_distance_cm() < 10 and legs.is_last_step_movimet() == true){
+        tone(A0, 440, 1000);
+        legs.set_current_state(BYELEFT);
+        legs.set_last_step_movimet(false);
     }
 
-
-    if(back == true){
-        while(millis() - t0 < delta_t){
-            legs.move_backward();
-        }
-        back = false;
-        left = true;
-        t0 = millis();
-
+    if(legs.get_current_state() == BYELEFT and legs.is_last_step_movimet() == true){
+        legs.set_current_state(FORWARD);
     }
+    */
 
-    if(left == true){
-        while(millis() - t0 < delta_t){
-            legs.turn_left();
-        }
-        left = false;
+    legs.move_according_state();
+
+
+
+    //Serial.println(velocity.velocity_cm_per_s());
+    //legs.zero_pos();
+    /*
+    if (bluetooth.available() > 0) {
+    // read the oldest byte in the serial buffer:
+    incomingByte = bluetooth.read();
+    // if it's a capital H (ASCII 72), turn on the LED:
+    if (incomingByte == 'W') {
+      legs.move_forward();
+       bluetooth.println("LED: ON");
     }
+    // if it's an L (ASCII 76) turn off the LED:
+    if (incomingByte == 'S') {
+      legs.move_backward();
+    }
+  }
 
-    legs.move_forward();
+    */
+        //bluetooth.print("Velo cm/s: ");
+        //bluetooth.println(velocity.measure_distance_cm());
+
+
 
 
 }

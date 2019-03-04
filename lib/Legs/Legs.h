@@ -46,6 +46,8 @@ limitations under the License.
 
 */
 
+enum states {FORWARD, BACKWARD, LEFT, RIGHT, BYELEFT, BYERIGHT, STOP, ENDSTATE};
+
 class Legs {
 private:
     Servo servo_rs1;
@@ -56,36 +58,47 @@ private:
     Servo servo_li1;
     Servo servo_ls2;
     Servo servo_li2;
-    unsigned long _delay_step = 50;
+    unsigned long _delay_step = 100;
     unsigned long _delay_turn = 100;
     unsigned long _delay_bye = 500;
+    unsigned long t0=millis();
+    int cont_back_for=0;
+    int cont_bye=0;
+    int cont_left_right=0;
+
+    states current_state=STOP;
+    boolean last_step_movimet = false;
 
 
-    int _foward[15][8] = { // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-                        {120, 30, 30, 120, 30, 130, 130, 30},
-                        // R2
-                        {120, 30, 30, 120, 30, 100, 130, 30},
-                        {120, 60, 30, 120, 30, 100, 130, 30},
-                        {120, 60, 30, 120, 30, 130, 130, 30},
-                        // R1
-                        {120, 60, 30, 120, 60, 130, 130, 30},
-                        {160, 60, 30, 120, 60, 130, 130, 30},
-                        {160, 60, 30, 120, 30, 130, 130, 30},
-                        //All backward
-                        {120, 30, 60, 160, 30, 130, 130, 30},
-                        //L2
-                        {120, 30, 30, 120, 30, 130, 130, 60},
-                        {120, 30, 30, 90, 30, 130, 130, 60},
-                        {120, 30, 30, 90, 30, 130, 130, 30},
-                        //L1
-                        {120, 30, 30, 90, 30, 130, 90, 30},
-                        {120, 30, 0, 90, 30, 130, 90, 30},
-                        {120, 30, 10, 90, 30, 130, 130, 30},
-                        //All backward
-                        {120, 30, 60, 160, 30, 130, 130, 30}
+    byte _foward[14][8] = {     //rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+                                //{120, 30, 30, 120, 30, 130, 140, 30},
+                                // R2
+                                //rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+                                {110, 10, 30, 170, 30, 100, 160, 30},
+                                {110, 60, 30, 170, 30, 100, 160, 30},
+                                {110, 60, 30, 170, 30, 130, 160, 30},
+                                // R1
+                                //rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+                                {110, 60, 30, 170, 60, 130, 160, 30},
+                                {170, 60, 30, 170, 60, 130, 160, 30},
+                                {170, 60, 30, 170, 30, 130, 160, 30},
+                                //All backward
+                                {110, 10, 30, 170, 30, 130, 160, 30},
+                                //L2
+                               //rs1, rs2,ls1,ls2, ri1, ri2, li1, li2
+                                {110, 10, 30, 170, 30, 130, 160, 60},
+                                {110, 10, 30, 90, 30, 130, 160, 60},
+                                {110, 10, 30, 90, 30, 130, 160, 30},
+                                //L1
+                               //rs1,rs2, ls1, ls2, ri1, ri2, li1, li2
+                                {110, 10, 30, 90, 30, 130, 90, 30},
+                                {110, 10, 0,  90, 30, 130,  90, 30},
+                                {110, 10, 0,  90, 30, 130, 160, 30},
+                                //All backward
+                                {110, 10, 30, 170, 30, 130, 160, 30}
                     };
 
-    int _backward[15][8] = { // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+    byte _backward[15][8] = { // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
                         {120, 30, 30, 120, 30, 130, 130, 30},
                         //L1
                         {120, 30, 10, 90, 30, 130, 130, 30},
@@ -110,31 +123,31 @@ private:
 
                     };
 
-    int _left[5][8] = {//rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+    byte _left[5][8] = {//rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
                         {120, 30,  30,  120, 30,  130, 130, 30},
                         {120, 30,  30,  120, 30,  110, 110, 30},
                         {120, 60,  60,  120, 30,  110, 110, 30},
                         {120, 60,  60,  120, 60,  130, 130, 60},
                     };
 
-    int _right[5][8] = {//rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+    byte _right[5][8] = {//rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
                         {120, 30,  30,  120, 30,  130, 130, 30},
                         {120, 30,  30,  120, 90,  130, 130, 90},
                         {90,  30,  30,   90, 90,  130, 130, 90},
                         {90,  30,  30,   90, 30,  110, 110, 30},
                     };
 
-    int _bye_left[7][8] = {//rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+    byte _bye_left[7][8] = {//rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
                            {120, 30,  30,  120, 30,  130, 130, 30},
-                           {120, 30,  0,   120, 0,   180, 130, 0},
-                           {120, 30,  0,   120, 0,   180,  50, 0},
-                           {120, 30,  0,   120, 0,   180,  90, 0},
-                           {120, 30,  0,   120, 0,   180,  50, 0},
-                           {120, 30,  0,   120, 0,   180,  90, 0},
+                           {180, 30,  0,   120, 0,   180, 130, 0},
+                           {180, 30,  0,   120, 0,   180,  50, 0},
+                           {180, 30,  0,   120, 0,   180,  90, 0},
+                           {180, 30,  0,   120, 0,   180,  50, 0},
+                           {180, 30,  0,   120, 0,   180,  90, 0},
                            {120, 30,  30,  120, 30,  130, 130, 30}
                          };
 
-     int _bye_right[7][8] = {//rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+     byte _bye_right[7][8] = {//rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
                             {120,  30,  30,   120, 30,  130, 130, 30},
                             {120,  30,   0,   120, 50,  180, 180, 0},
                             {120,  30,   0,   120, 90,  180, 180, 0},
@@ -157,6 +170,12 @@ public:
     void turn_right();
     void bye_bye_left();
     void bye_bye_right();
+
+    states get_current_state(){return current_state;}
+    void set_current_state(states state){current_state = state;}
+    void move_according_state();
+    boolean is_last_step_movimet(){return last_step_movimet;}
+    void set_last_step_movimet(boolean cstep){ last_step_movimet = cstep;}
 
 };
 

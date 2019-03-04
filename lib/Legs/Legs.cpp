@@ -52,61 +52,159 @@ void Legs::step(int rs1, int  rs2, int  ls1, int  ls2,
 }
 
 void Legs::move_forward(){
-
-    for(int i=0; i<15; i++){
-        // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-        step(_foward[i][0], _foward[i][1], _foward[i][2], _foward[i][3],
-             _foward[i][4], _foward[i][5], _foward[i][6], _foward[i][7]);
-        delay(_delay_step);
+    if(cont_back_for > 13){
+        cont_back_for = 0;
+        last_step_movimet = true;
+    }else{
+        last_step_movimet = false;
     }
 
+
+
+    if(millis() - t0 >= _delay_step){
+        t0 = millis();
+        // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+        step((int) _foward[cont_back_for][0],(int) _foward[cont_back_for][1],
+             (int)_foward[cont_back_for][2],(int) _foward[cont_back_for][3],
+             (int)_foward[cont_back_for][4],(int) _foward[cont_back_for][5],
+             (int) _foward[cont_back_for][6],(int) _foward[cont_back_for][7]);
+        cont_back_for += 1;
+    }
 }
 
 void Legs::move_backward(){
-    for(int i=0; i< 14; i++){
+
+    if(cont_back_for > 14){
+        cont_back_for = 0;
+        last_step_movimet = true;
+    }else{
+        last_step_movimet = false;
+    }
+
+
+
+    if(millis() - t0 >= _delay_step){
+        t0 = millis();
         // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-        step(_backward[i][0], _backward[i][1], _backward[i][2], _backward[i][3],
-             _backward[i][4], _backward[i][5], _backward[i][6], _backward[i][7]);
-        delay(_delay_step);
+        step((int)_backward[cont_back_for][0],(int) _backward[cont_back_for][1],
+             (int) _backward[cont_back_for][2],(int) _backward[cont_back_for][3],
+             (int) _backward[cont_back_for][4],(int) _backward[cont_back_for][5],
+             (int) _backward[cont_back_for][6], (int)_backward[cont_back_for][7]);
+        cont_back_for += 1;
     }
 }
 
 
 void Legs::turn_right(){
-    for(int i=0; i < 4; i++){
+
+    if(cont_left_right > 3){
+        cont_back_for = 0;
+        last_step_movimet = true;
+    }else{
+        last_step_movimet = false;
+    }
+
+    if(millis() - t0 >= _delay_turn){
+        t0 = millis();
         // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-        step(_right[i][0], _right[i][1], _right[i][2], _right[i][3],
-             _right[i][4], _right[i][5], _right[i][6], _right[i][7]);
-        delay(_delay_turn);
+        step((int)_right[cont_left_right][0],(int) _right[cont_left_right][1],
+             (int)_right[cont_left_right][2],(int) _right[cont_left_right][3],
+             (int)_right[cont_left_right][4],(int) _right[cont_left_right][5],
+             (int) _right[cont_left_right][6],(int) _right[cont_left_right][7]);
+        cont_left_right += 1;
     }
 }
 
 
 void Legs::turn_left(){
-    for(int i=0; i < 4 ; i++){
+
+    if(cont_left_right > 3){
+        cont_left_right = 0;
+        last_step_movimet = true;
+    }else{
+        last_step_movimet = false;
+    }
+
+    if(millis() - t0 >= _delay_turn){
+        t0 = millis();
         // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-        step(_left[i][0], _left[i][1], _left[i][2], _left[i][3],
-             _left[i][4], _left[i][5], _left[i][6], _left[i][7]);
-        delay(_delay_turn);
+        step((int)_left[cont_left_right][0], (int) _left[cont_left_right][1],
+             (int) _left[cont_left_right][2],(int) _left[cont_left_right][3],
+             (int) _left[cont_left_right][4],(int) _left[cont_left_right][5],
+             (int) _left[cont_left_right][6],(int) _left[cont_left_right][7]);
+        cont_left_right += 1;
     }
 }
 
 void Legs::bye_bye_left(){
-    for(int i=0; i < 7 ; i++){
+
+    if(cont_bye > 6){
+        cont_bye = 0;
+        last_step_movimet = true;
+    }else{
+        last_step_movimet = false;
+    }
+
+    if(millis() - t0 >= _delay_bye){
+        t0 = millis();
         // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-        step(_bye_left[i][0], _bye_left[i][1], _bye_left[i][2], _bye_left[i][3],
-             _bye_left[i][4], _bye_left[i][5], _bye_left[i][6], _bye_left[i][7]);
-        delay(_delay_bye);
+        step((int)_bye_left[cont_bye][0], (int) _bye_left[cont_bye][1],
+             (int) _bye_left[cont_bye][2], (int) _bye_left[cont_bye][3],
+             (int) _bye_left[cont_bye][4],(int) _bye_left[cont_bye][5],
+             (int)_bye_left[cont_bye][6],(int) _bye_left[cont_bye][7]);
+        cont_bye += 1;
     }
 
 }
 
 void Legs::bye_bye_right(){
-    for(int i=0; i < 7 ; i++){
+
+    if(cont_bye > 6){
+        cont_bye = 0;
+        last_step_movimet = true;
+    }else{
+        last_step_movimet = false;
+    }
+
+    if(millis() - t0 >= _delay_bye){
+        t0 = millis();
         // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-        step(_bye_right[i][0], _bye_right[i][1], _bye_right[i][2], _bye_right[i][3],
-             _bye_right[i][4], _bye_right[i][5], _bye_right[i][6], _bye_right[i][7]);
-        delay(_delay_bye);
+        step((int)_bye_right[cont_bye][0], (int)_bye_right[cont_bye][1],
+             (int) _bye_right[cont_bye][2],(int) _bye_right[cont_bye][3],
+             (int)_bye_right[cont_bye][4], (int)_bye_right[cont_bye][5],
+             (int) _bye_right[cont_bye][6], (int)_bye_right[cont_bye][7]);
+        cont_bye += 1;
+    }
+
+}
+
+
+void Legs::move_according_state(){
+    switch (get_current_state()) {
+        case FORWARD:
+        move_forward();
+        break;
+        case BACKWARD:
+        move_backward();
+        break;
+        case LEFT:
+        turn_left();
+        break;
+        case RIGHT:
+        turn_right();
+        break;
+        case BYELEFT:
+        bye_bye_left();
+        break;
+        case BYERIGHT:
+        bye_bye_right();
+        break;
+        case STOP:
+        zero_pos();
+        break;
+        default:
+        move_forward();
+        break;
     }
 
 }
