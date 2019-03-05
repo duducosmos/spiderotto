@@ -20,6 +20,7 @@ limitations under the License.
 Legs legs;
 
 void setup() {
+    Serial.begin(9600);
     legs.start_i2c();
     legs.set_servos(4, 5, 8, 9, 2, 3, 6, 7);
     legs.zero_pos();

@@ -112,7 +112,9 @@ void Legs::receive_data(int byte_count){
     */
     
     while(Wire.available()){
-        switch(Wire.read()){
+        int read = Wire.read();
+        
+        switch(read){
             case 0:
             legsi2c->set_current_state(FORWARD);
             break;
@@ -146,7 +148,12 @@ void Legs::send_data(){
     Send data to i2c communication.
     Send the current legs moviment state.
     */
-    Wire.write(legsi2c->get_current_state());
+    String info = "State:" + 
+                  String(legsi2c->get_current_state()) +
+                  ",Last State:" +
+                  String(legsi2c->is_last_step_movimet());
+                  
+    Wire.write(info.c_str());
    
 }
 
