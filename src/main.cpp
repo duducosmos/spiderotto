@@ -41,19 +41,13 @@ float seno;
 int frequencia;
 
 void setup() {
-
+    legs.start_i2c();
     legs.set_servos(4, 5, 8, 9, 2, 3, 6, 7);
     legs.zero_pos();
-
     Serial.begin(9600);
-
-    //bluetooth.begin(9600);
-    delay(1000);
     t0 = millis();
-    pinMode(A0, OUTPUT);
     dt = millis();
-    velocity.average_distance_cm();
-    legs.set_current_state(FORWARD);
+ 
 
 }
 
@@ -61,45 +55,6 @@ void loop() {
 
     Serial.println(legs.get_current_state());
 
-    /*
-
-    if(velocity.average_distance_cm() < 10 and legs.is_last_step_movimet() == true){
-        tone(A0, 440, 1000);
-        legs.set_current_state(BYELEFT);
-        legs.set_last_step_movimet(false);
-    }
-
-    if(legs.get_current_state() == BYELEFT and legs.is_last_step_movimet() == true){
-        legs.set_current_state(FORWARD);
-    }
-    */
-
     legs.move_according_state();
-
-
-
-    //Serial.println(velocity.velocity_cm_per_s());
-    //legs.zero_pos();
-    /*
-    if (bluetooth.available() > 0) {
-    // read the oldest byte in the serial buffer:
-    incomingByte = bluetooth.read();
-    // if it's a capital H (ASCII 72), turn on the LED:
-    if (incomingByte == 'W') {
-      legs.move_forward();
-       bluetooth.println("LED: ON");
-    }
-    // if it's an L (ASCII 76) turn off the LED:
-    if (incomingByte == 'S') {
-      legs.move_backward();
-    }
-  }
-
-    */
-        //bluetooth.print("Velo cm/s: ");
-        //bluetooth.println(velocity.measure_distance_cm());
-
-
-
 
 }

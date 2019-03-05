@@ -1,0 +1,59 @@
+{
+    "!!! WARNING !!!": "PLEASE DO NOT MODIFY THIS FILE! USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags",
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/pi/.platformio/packages/framework-arduinoavr/cores/arduino",
+                "/home/pi/.platformio/packages/framework-arduinoavr/variants/eightanaloginputs",
+                "/home/pi/Documents/PlatformIO/Projects/PiDogI2C/lib/Legs",
+                "/home/pi/Documents/PlatformIO/Projects/PiDogI2C/lib/Velocity",
+                "/home/pi/.platformio/lib/Servo_ID883/src",
+                "/home/pi/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SoftwareSerial/src",
+                "/home/pi/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/Wire/src",
+                "/home/pi/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/EEPROM/src",
+                "/home/pi/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/HID/src",
+                "/home/pi/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SPI/src",
+                "/home/pi/.platformio/packages/tool-unity",
+                "/home/pi/Documents/PlatformIO/Projects/PiDogI2C/include",
+                "/home/pi/Documents/PlatformIO/Projects/PiDogI2C/src",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": "${workspaceRoot}/.vscode/.browse.c_cpp.db",
+                "path": [
+                    "/home/pi/.platformio/packages/framework-arduinoavr/cores/arduino",
+                    "/home/pi/.platformio/packages/framework-arduinoavr/variants/eightanaloginputs",
+                    "/home/pi/Documents/PlatformIO/Projects/PiDogI2C/lib/Legs",
+                    "/home/pi/Documents/PlatformIO/Projects/PiDogI2C/lib/Velocity",
+                    "/home/pi/.platformio/lib/Servo_ID883/src",
+                    "/home/pi/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SoftwareSerial/src",
+                    "/home/pi/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/Wire/src",
+                    "/home/pi/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/EEPROM/src",
+                    "/home/pi/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/HID/src",
+                    "/home/pi/.platformio/packages/framework-arduinoavr/libraries/__cores__/arduino/SPI/src",
+                    "/home/pi/.platformio/packages/tool-unity",
+                    "/home/pi/Documents/PlatformIO/Projects/PiDogI2C/include",
+                    "/home/pi/Documents/PlatformIO/Projects/PiDogI2C/src",
+                    "",
+                    "${workspaceRoot}"
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=30604",
+                "ARDUINO_AVR_NANO",
+                "F_CPU=16000000L",
+                "ARDUINO_ARCH_AVR",
+                "ARDUINO=10805",
+                "__AVR_ATmega328P__",
+                ""
+            ],
+            "intelliSenseMode": "clang-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "compilerPath": "/home/pi/.platformio/packages/toolchain-atmelavr/bin/avr-gcc -mmcu=atmega328p"
+        }
+    ],
+    "version": 3
+}

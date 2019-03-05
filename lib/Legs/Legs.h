@@ -15,6 +15,7 @@ limitations under the License.
 */
 #include <Arduino.h>
 #include <Servo.h>
+#include <Wire.h>
 #ifndef LEGS_H
 #define LEGS_H
 
@@ -49,6 +50,7 @@ limitations under the License.
 enum states {FORWARD, BACKWARD, LEFT, RIGHT, BYELEFT, BYERIGHT, STOP, ENDSTATE};
 
 class Legs {
+    
 private:
     Servo servo_rs1;
     Servo servo_ri1;
@@ -65,6 +67,7 @@ private:
     int cont_back_for=0;
     int cont_bye=0;
     int cont_left_right=0;
+    int i2c_address = 0x04;
 
     states current_state=STOP;
     boolean last_step_movimet = false;
@@ -157,8 +160,12 @@ private:
                             {120,  30,  30,   120, 30,  130, 130, 30}
                           };
 
-
 public:
+    static Legs * legsi2c;
+    static void receive_data(int byte_count);
+    static void send_data();
+    Legs();
+    void start_i2c();
     void set_servos(int rs1, int ri1, int rs2, int ri2,
                     int ls1, int li1, int ls2, int li2);
     void zero_pos();
@@ -176,6 +183,8 @@ public:
     void move_according_state();
     boolean is_last_step_movimet(){return last_step_movimet;}
     void set_last_step_movimet(boolean cstep){ last_step_movimet = cstep;}
+    void set_i2c_address(int address){i2c_address = address;}
+    int get_i2c_address(){return i2c_address;}
 
 };
 

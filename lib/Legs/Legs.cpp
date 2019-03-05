@@ -15,6 +15,13 @@ limitations under the License.
 */
 
 #include "Legs.h"
+#include <Wire.h>
+
+Legs * Legs::legsi2c = NULL;
+
+Legs::Legs(){
+    legsi2c = this;
+}
 
 void Legs::set_servos(int rs1, int ri1,
           int rs2, int ri2,
@@ -29,6 +36,58 @@ void Legs::set_servos(int rs1, int ri1,
     servo_li1.attach(li1);
     servo_ls2.attach(ls2);
     servo_li2.attach(li2);
+
+}
+
+void Legs::start_i2c(){
+    Wire.begin(i2c_address);
+    Wire.onReceive(this->receive_data);
+    Wire.onRequest(this->send_data);
+}
+
+void Legs::receive_data(int byte_count){
+    
+    while(Wire.available()){
+        switch(Wire.read()){
+            case 0:
+            legsi2c->set_current_state(FORWARD);
+            break;
+            case 1:
+            legsi2c->set_current_state(BACKWARD);
+            break;
+            case 2:
+            legsi2c->set_current_state(LEFT);
+            break;
+            case 3:
+            legsi2c->set_current_state(RIGHT);
+            break;
+            case 4:
+            legsi2c->set_current_state(BYELEFT);
+            break;
+            case 5:
+            legsi2c->set_current_state(BYERIGHT);
+            break;
+            case 6:
+            legsi2c->set_current_state(STOP);
+            break;
+            default:
+            legsi2c->set_current_state(STOP);
+            break;
+
+            
+
+
+        }
+        
+
+    }
+   
+
+}
+
+void Legs::send_data(){
+    Wire.write(legsi2c->get_current_state());
+    Wire.write("Que coisa");
 
 }
 
