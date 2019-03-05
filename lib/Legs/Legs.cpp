@@ -58,6 +58,30 @@ void Legs::set_servos(int rs1, int ri1,
         li1: integer port connected to left front inferior servo.
         ls2: integer port connected to left back superior servo.
         li2: integer port connected to left back inferior servo.
+
+                         Front
+                     ---------------
+                    |     O   O     |
+                    |---------------|
+                    |               |
+              ----- ---------------  -----
+             | RS1 |                | LS1 |
+              ----                    ----
+         -----                              -----
+        | RI1 |                            | LI1 |
+         -----                              -----
+
+                        Back
+                   ---------------
+                  |               |
+                  |---------------|
+                  |               |
+            ----- ---------------  -----
+            | LS2 |                | RS2 |
+             ----                    ----
+         -----                           -----
+        | LI2 |                          | RI2 |
+         -----                            -----
     */
 
     servo_rs1.attach(rs1);
