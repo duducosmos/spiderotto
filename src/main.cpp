@@ -15,46 +15,16 @@ limitations under the License.
 */
 
 #include <Arduino.h>
-#include <SoftwareSerial.h>
 #include <Legs.h>
-#include <Velocity.h>
-
-//SoftwareSerial bluetooth(2, 13); // TX, RX (Bluetooth)
-int incomingByte;
-
-
-Velocity velocity(3, 4);   // (Trig PIN,Echo PIN)
-
-
-unsigned long t0;
-unsigned long delta_t=5000;
-boolean back = false;
-boolean left = false;
-boolean bye = false;
-
-float d0 = 0;
-float v0 = 0;
-float dt;
 
 Legs legs;
-float seno;
-int frequencia;
 
 void setup() {
     legs.start_i2c();
     legs.set_servos(4, 5, 8, 9, 2, 3, 6, 7);
     legs.zero_pos();
-    Serial.begin(9600);
-    t0 = millis();
-    dt = millis();
- 
-
 }
 
 void loop() {
-
-    Serial.println(legs.get_current_state());
-
     legs.move_according_state();
-
 }

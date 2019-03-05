@@ -20,13 +20,45 @@ limitations under the License.
 Legs * Legs::legsi2c = NULL;
 
 Legs::Legs(){
+    /*
+    Constructor fo classe. 
+    Start legsi2c as the current object.
+    */
     legsi2c = this;
+}
+
+states Legs::get_current_state(){
+    /*
+    Return the current moviment state.
+    States enumerator order:
+        FORWARD
+        BACKWARD
+        LEFT
+        RIGHT
+        BYELEFT
+        BYERIGHT
+        STOP
+        ENDSTATE
+    */
+    return current_state;
 }
 
 void Legs::set_servos(int rs1, int ri1,
           int rs2, int ri2,
           int ls1, int li1,
           int ls2, int li2){
+    /*
+    set servos ports.
+    Parameters:
+        rs1: integer port connected to right front superior servo.
+        ri1: integer port connected to right front inferior servo.
+        rs2: integer port connected to right back superior servo.
+        ri2: integer port connected to right back inferior servo.
+        ls1: integer port connected to left front superior servo.
+        li1: integer port connected to left front inferior servo.
+        ls2: integer port connected to left back superior servo.
+        li2: integer port connected to left back inferior servo.
+    */
 
     servo_rs1.attach(rs1);
     servo_ri1.attach(ri1);
@@ -40,12 +72,20 @@ void Legs::set_servos(int rs1, int ri1,
 }
 
 void Legs::start_i2c(){
+    /*
+    Start i2c communication.
+    */
     Wire.begin(i2c_address);
     Wire.onReceive(this->receive_data);
     Wire.onRequest(this->send_data);
 }
 
 void Legs::receive_data(int byte_count){
+    /*
+    Receive data from i2c communication.
+    Parameter:
+        byte_count: integer;
+    */
     
     while(Wire.available()){
         switch(Wire.read()){
@@ -73,31 +113,42 @@ void Legs::receive_data(int byte_count){
             default:
             legsi2c->set_current_state(STOP);
             break;
-
-            
-
-
         }
-        
-
     }
-   
-
 }
 
 void Legs::send_data(){
+    /*
+    Send data to i2c communication.
+    Send the current legs moviment state.
+    */
     Wire.write(legsi2c->get_current_state());
-    Wire.write("Que coisa");
-
+   
 }
 
 void Legs::zero_pos(){
+    /*
+    Put all servos in initial position.
+    */
     //  rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
     step(180, 0, 0, 180, 0, 180, 180, 0);
 }
 
 void Legs::step(int rs1, int  rs2, int  ls1, int  ls2,
                 int ri1, int  ri2, int  li1, int  li2){
+    /*
+    Move all servos to a defined angle:
+    Parameters:
+        rs1: integer angle of right front superior servo.
+        ri1: integer angle of right front inferior servo.
+        rs2: integer angle of right back superior servo.
+        ri2: integer angle of right back inferior servo.
+        ls1: integer angle of left front superior servo.
+        li1: integer angle of left front inferior servo.
+        ls2: integer pngle of left back superior servo.
+        li2: integer angle of left back inferior servo.
+
+    */
     servo_rs1.write(rs1);
     servo_rs2.write(rs2);
     servo_ls1.write(ls1);
@@ -111,14 +162,15 @@ void Legs::step(int rs1, int  rs2, int  ls1, int  ls2,
 }
 
 void Legs::move_forward(){
+    /*
+    Move robot forward.
+    */
     if(cont_back_for > 13){
         cont_back_for = 0;
         last_step_movimet = true;
     }else{
         last_step_movimet = false;
     }
-
-
 
     if(millis() - t0 >= _delay_step){
         t0 = millis();
@@ -132,6 +184,9 @@ void Legs::move_forward(){
 }
 
 void Legs::move_backward(){
+    /*
+    Move robot backward.
+    */
 
     if(cont_back_for > 14){
         cont_back_for = 0;
@@ -139,8 +194,6 @@ void Legs::move_backward(){
     }else{
         last_step_movimet = false;
     }
-
-
 
     if(millis() - t0 >= _delay_step){
         t0 = millis();
@@ -155,6 +208,9 @@ void Legs::move_backward(){
 
 
 void Legs::turn_right(){
+    /*
+    Turn robot to right direction.
+    */
 
     if(cont_left_right > 3){
         cont_back_for = 0;
@@ -176,6 +232,9 @@ void Legs::turn_right(){
 
 
 void Legs::turn_left(){
+    /*
+    Turn robot to the left direction.
+    */
 
     if(cont_left_right > 3){
         cont_left_right = 0;
@@ -196,6 +255,9 @@ void Legs::turn_left(){
 }
 
 void Legs::bye_bye_left(){
+    /*
+    Send bye with left front leg.
+    */
 
     if(cont_bye > 6){
         cont_bye = 0;
@@ -217,6 +279,9 @@ void Legs::bye_bye_left(){
 }
 
 void Legs::bye_bye_right(){
+    /*
+    Send bye with right front leg.
+    */
 
     if(cont_bye > 6){
         cont_bye = 0;
@@ -239,6 +304,9 @@ void Legs::bye_bye_right(){
 
 
 void Legs::move_according_state(){
+    /*
+    Given the current state, update the moviment.
+    */
     switch (get_current_state()) {
         case FORWARD:
         move_forward();
@@ -262,8 +330,40 @@ void Legs::move_according_state(){
         zero_pos();
         break;
         default:
-        move_forward();
+        zero_pos();
         break;
     }
 
+}
+
+String Legs::get_current_state_name(){
+    /*
+    Return a String representing the current state.
+    */
+    switch (get_current_state()) {
+        case FORWARD:
+        return "FORWARD";
+        break;
+        case BACKWARD:
+        return "BACKWARD";
+        break;
+        case LEFT:
+        return "LEFT";
+        break;
+        case RIGHT:
+        return "RIGHT";
+        break;
+        case BYELEFT:
+        return "BYELEFT";
+        break;
+        case BYERIGHT:
+        return "BYERIGHT";
+        break;
+        case STOP:
+        return "STOP";
+        break;
+        default:
+        return "STOP";
+        break;
+    }
 }
