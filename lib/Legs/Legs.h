@@ -69,6 +69,8 @@ private:
     int cont_bye=0;
     int cont_left_right = 0;
     int i2c_address = 0x04;
+    float velocity = 0;
+    float distance = -1;
 
     states current_state = STOP;
     boolean last_step_movimet = false;
@@ -188,6 +190,10 @@ public:
     void set_last_step_movimet(boolean cstep){ last_step_movimet = cstep;}
     void set_i2c_address(int address){i2c_address = address;}
     int get_i2c_address(){return i2c_address;}
+    float get_velocity(){return velocity;}
+    float get_distance(){return distance;}
+    void set_velocity(float v){velocity = v;}
+    void set_distance(float d){distance = d;}
 
 };
 

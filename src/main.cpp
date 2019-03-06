@@ -16,8 +16,10 @@ limitations under the License.
 
 #include <Arduino.h>
 #include <Legs.h>
+#include <Velocity.h>
 
 Legs legs;
+Velocity velocity(10, 11);
 
 void setup() {
     Serial.begin(9600);
@@ -27,5 +29,7 @@ void setup() {
 }
 
 void loop() {
-    legs.move_according_state();
+    legs.set_distance(velocity.average_distance_cm());
+    legs.set_velocity(velocity.velocity_cm_per_s());
+    legs.move_according_state();   
 }

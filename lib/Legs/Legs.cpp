@@ -147,11 +147,18 @@ void Legs::send_data(){
     /*
     Send data to i2c communication.
     Send the current legs moviment state.
+    Info total bytes: 32
     */
-    String info = "State:" + 
+    String info = "s:" + 
                   String(legsi2c->get_current_state()) +
-                  ",Last State:" +
-                  String(legsi2c->is_last_step_movimet());
+                  ",ls:" +
+                  String(legsi2c->is_last_step_movimet()) +
+                  ",v:" +
+                  String(legsi2c->get_velocity(), 3) +
+                  ",d:" +
+                  String(legsi2c->get_distance(), 3);
+
+    Serial.println(info);
                   
     Wire.write(info.c_str());
    
