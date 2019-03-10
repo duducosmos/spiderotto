@@ -42,7 +42,7 @@ int frequencia;
 
 void setup() {
 
-    legs.set_servos(4, 5, 8, 9, 2, 3, 6, 7);
+    legs.set_servos(6, 7, 8, 9, 10, 11, 12, 13);
     legs.zero_pos();
 
     Serial.begin(9600);
