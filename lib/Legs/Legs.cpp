@@ -21,7 +21,7 @@ Legs * Legs::legsi2c = NULL;
 
 Legs::Legs(){
     /*
-    Constructor fo classe. 
+    Constructor fo classe.
     Start legsi2c as the current object.
     */
     legsi2c = this;
@@ -110,10 +110,10 @@ void Legs::receive_data(int byte_count){
     Parameter:
         byte_count: integer;
     */
-    
+
     while(Wire.available()){
         int read = Wire.read();
-        
+
         switch(read){
             case 0:
             legsi2c->set_current_state(FORWARD);
@@ -149,7 +149,7 @@ void Legs::send_data(){
     Send the current legs moviment state.
     Info total bytes: 32
     */
-    String info = "s:" + 
+    String info = "s:" +
                   String(legsi2c->get_current_state()) +
                   ",ls:" +
                   String(legsi2c->is_last_step_movimet()) +
@@ -159,9 +159,9 @@ void Legs::send_data(){
                   String(legsi2c->get_distance(), 3);
 
     Serial.println(info);
-                  
+
     Wire.write(info.c_str());
-   
+
 }
 
 void Legs::zero_pos(){

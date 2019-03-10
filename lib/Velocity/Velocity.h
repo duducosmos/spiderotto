@@ -7,7 +7,7 @@
 class Velocity{
 private:
 
-    #define readsize 20
+    #define readsize 10
     unsigned int readIndex = 0;
     double s0=0;
 

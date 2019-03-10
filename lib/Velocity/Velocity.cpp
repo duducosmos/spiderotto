@@ -40,9 +40,9 @@ double Velocity::measure_distance_cm(){
    delayMicroseconds(10);
    digitalWrite(trigger_pin, LOW);
    // Measure the length of echo signal, which is equal to the time needed for sound to go there and back.
-   unsigned long durationMicroSec = pulseIn(echo_pin, HIGH);
+   unsigned long durationMicroSec = pulseIn(echo_pin, HIGH, 10000);
    double distanceCm = durationMicroSec / 2.0 * 0.0343;
-   if (distanceCm == 0 || distanceCm > 400) {
+   if (distanceCm <= 0 || distanceCm > 400) {
        return -1.0 ;
    } else {
        return distanceCm;
@@ -52,14 +52,20 @@ double Velocity::measure_distance_cm(){
 
 double Velocity::average_distance_cm(){
     totalReads = totalReads - reads[readIndex];
-    reads[readIndex] = measure_distance_cm();
-    totalReads = totalReads + reads[readIndex];
-    readIndex += 1;
-    if(readIndex >= readsize){
-        readIndex = 0;
+    double mesure = measure_distance_cm();
+    if(mesure <= 0){
+      mesure = 400;
+
     }
 
-    averageReads = totalReads / readsize;
+      reads[readIndex] = mesure;
+      totalReads = totalReads + reads[readIndex];
+      readIndex += 1;
+      if(readIndex >= readsize){
+          readIndex = 0;
+      averageReads = totalReads / readsize;
+    }
+
 
     return averageReads;
 }
@@ -69,7 +75,7 @@ double Velocity::velocity_cm_per_s(){
     if(millis() - t0 > dt){
 
         v = s0 - average_distance_cm();
-        v = v / ( (double) (millis() - t0) / 1000.0);
+        v = v / ( (double) dt / 1000.0);
         s0 = average_distance_cm();
         t0 = millis();
     }

@@ -50,7 +50,7 @@ limitations under the License.
 enum states {FORWARD, BACKWARD, LEFT, RIGHT, BYELEFT, BYERIGHT, STOP, ENDSTATE};
 
 class Legs {
-    
+
 private:
     Servo servo_rs1;
     Servo servo_ri1;
@@ -183,7 +183,7 @@ public:
     void bye_bye_right();
     states get_current_state();
     String get_current_state_name();
-    
+
     void set_current_state(states state){current_state = state;}
     void move_according_state();
     boolean is_last_step_movimet(){return last_step_movimet;}

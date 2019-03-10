@@ -19,17 +19,50 @@ limitations under the License.
 #include <Velocity.h>
 
 Legs legs;
-Velocity velocity(10, 11);
+Velocity velocity(5, 4);
+bool turn = false;
+bool bye = false;
 
 void setup() {
     Serial.begin(9600);
     legs.start_i2c();
-    legs.set_servos(4, 5, 8, 9, 2, 3, 6, 7);
+    legs.set_servos(6, 7, 8, 9, 10, 11, 12, 13);
     legs.zero_pos();
+    legs.set_current_state(FORWARD);
+    velocity.average_distance_cm();
+    delay(1000);
 }
 
 void loop() {
     legs.set_distance(velocity.average_distance_cm());
-    legs.set_velocity(velocity.velocity_cm_per_s());
+    delay(10);
+
+    if(legs.get_distance() < 20){
+      turn = true;
+    }
+
+    /*
+
+    if(bye == true){
+      if(legs.get_current_state() == FORWARD){
+        legs.set_current_state(BYELEFT);
+      }else if(legs.is_last_step_movimet() == true && bye == true){
+        bye = false;
+        turn = true;
+      }
+
+    }
+    */
+
+    if(turn == true){
+      if(legs.get_current_state() == FORWARD){
+        legs.set_current_state(LEFT);
+      }else if(legs.is_last_step_movimet() == true){
+        bye = false;
+        turn = false;
+        legs.set_current_state(FORWARD);
+      }
+    }
+
     legs.move_according_state();
 }
