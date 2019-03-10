@@ -15,6 +15,7 @@ limitations under the License.
 */
 #include <Arduino.h>
 #include <Servo.h>
+#include <Wire.h>
 #ifndef LEGS_H
 #define LEGS_H
 
@@ -49,6 +50,7 @@ limitations under the License.
 enum states {FORWARD, BACKWARD, LEFT, RIGHT, BYELEFT, BYERIGHT, STOP, ENDSTATE};
 
 class Legs {
+    
 private:
     Servo servo_rs1;
     Servo servo_ri1;
@@ -58,68 +60,71 @@ private:
     Servo servo_li1;
     Servo servo_ls2;
     Servo servo_li2;
+
     unsigned long _delay_step = 100;
     unsigned long _delay_turn = 100;
     unsigned long _delay_bye = 500;
     unsigned long t0=millis();
     int cont_back_for=0;
     int cont_bye=0;
-    int cont_left_right=0;
+    int cont_left_right = 0;
+    int i2c_address = 0x04;
+    float velocity = 0;
+    float distance = -1;
 
-    states current_state=STOP;
+    states current_state = STOP;
     boolean last_step_movimet = false;
 
 
-    byte _foward[14][8] = {     //rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-                                //{120, 30, 30, 120, 30, 130, 140, 30},
-                                // R2
-                                //rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-                                {110, 10, 30, 170, 30, 100, 160, 30},
-                                {110, 60, 30, 170, 30, 100, 160, 30},
-                                {110, 60, 30, 170, 30, 130, 160, 30},
-                                // R1
-                                //rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-                                {110, 60, 30, 170, 60, 130, 160, 30},
-                                {170, 60, 30, 170, 60, 130, 160, 30},
-                                {170, 60, 30, 170, 30, 130, 160, 30},
-                                //All backward
-                                {110, 10, 30, 170, 30, 130, 160, 30},
-                                //L2
-                               //rs1, rs2,ls1,ls2, ri1, ri2, li1, li2
-                                {110, 10, 30, 170, 30, 130, 160, 60},
-                                {110, 10, 30, 90, 30, 130, 160, 60},
-                                {110, 10, 30, 90, 30, 130, 160, 30},
-                                //L1
-                               //rs1,rs2, ls1, ls2, ri1, ri2, li1, li2
-                                {110, 10, 30, 90, 30, 130, 90, 30},
-                                {110, 10, 0,  90, 30, 130,  90, 30},
-                                {110, 10, 0,  90, 30, 130, 160, 30},
-                                //All backward
-                                {110, 10, 30, 170, 30, 130, 160, 30}
-                    };
+    byte _foward[14][8] = { // R2
+                            //rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+                            {110, 10, 30, 170, 30, 100, 160, 30},
+                            {110, 60, 30, 170, 30, 100, 160, 30},
+                            {110, 60, 30, 170, 30, 130, 160, 30},
+                            // R1
+                            //rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+                            {110, 60, 30, 170, 60, 130, 160, 30},
+                            {170, 60, 30, 170, 60, 130, 160, 30},
+                            {170, 60, 30, 170, 30, 130, 160, 30},
+                            //All backward
+                            {110, 10, 30, 170, 30, 130, 160, 30},
+                            //L2
+                            //rs1, rs2,ls1,ls2, ri1, ri2, li1, li2
+                            {110, 10, 30, 170, 30, 130, 160, 60},
+                            {110, 10, 30, 90, 30, 130, 160, 60},
+                            {110, 10, 30, 90, 30, 130, 160, 30},
+                            //L1
+                            //rs1,rs2, ls1, ls2, ri1, ri2, li1, li2
+                            {110, 10, 30, 90, 30, 130, 90, 30},
+                            {110, 10, 0,  90, 30, 130,  90, 30},
+                            {110, 10, 0,  90, 30, 130, 160, 30},
+                            //All backward
+                            {110, 10, 30, 170, 30, 130, 160, 30}
+                            };
 
-    byte _backward[15][8] = { // rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
-                        {120, 30, 30, 120, 30, 130, 130, 30},
-                        //L1
-                        {120, 30, 10, 90, 30, 130, 130, 30},
-                        {120, 30, 0, 90, 30, 130, 90, 30},
-                        {120, 30, 30, 90, 30, 130, 90, 30},
-                        //L2
-                        {120, 30, 30, 90, 30, 130, 130, 30},
-                        {120, 30, 30, 90, 30, 130, 130, 60},
-                        {120, 30, 30, 120, 30, 130, 130, 60},
-                        //All backward
-                        {120, 30, 60, 160, 30, 130, 130, 30},
-                        // R1
-                        {160, 60, 30, 120, 30, 130, 130, 30},
-                        {160, 60, 30, 120, 60, 130, 130, 30},
-                        {120, 60, 30, 120, 60, 130, 130, 30},
-                        // R2
-                        {120, 60, 30, 120, 30, 130, 130, 30},
-                        {120, 60, 30, 120, 30, 100, 130, 30},
-                        {120, 30, 30, 120, 30, 100, 130, 30},
-                        //All backward
-                        {120, 30, 30, 120, 30, 130, 130, 30}
+    byte _backward[15][8] = {
+                            //rs1, rs2, ls1, ls2, ri1, ri2, li1, li2
+                            {120, 30, 30, 120, 30, 130, 130, 30},
+                            //L1
+                            {120, 30, 10, 90, 30, 130, 130, 30},
+                            {120, 30, 0, 90, 30, 130, 90, 30},
+                            {120, 30, 30, 90, 30, 130, 90, 30},
+                            //L2
+                            {120, 30, 30, 90, 30, 130, 130, 30},
+                            {120, 30, 30, 90, 30, 130, 130, 60},
+                            {120, 30, 30, 120, 30, 130, 130, 60},
+                            //All backward
+                            {120, 30, 60, 160, 30, 130, 130, 30},
+                            // R1
+                            {160, 60, 30, 120, 30, 130, 130, 30},
+                            {160, 60, 30, 120, 60, 130, 130, 30},
+                            {120, 60, 30, 120, 60, 130, 130, 30},
+                            // R2
+                            {120, 60, 30, 120, 30, 130, 130, 30},
+                            {120, 60, 30, 120, 30, 100, 130, 30},
+                            {120, 30, 30, 120, 30, 100, 130, 30},
+                            //All backward
+                            {120, 30, 30, 120, 30, 130, 130, 30}
 
                     };
 
@@ -157,8 +162,14 @@ private:
                             {120,  30,  30,   120, 30,  130, 130, 30}
                           };
 
-
 public:
+    static Legs * legsi2c;
+    static void receive_data(int byte_count);
+    static void send_data();
+
+    Legs();
+
+    void start_i2c();
     void set_servos(int rs1, int ri1, int rs2, int ri2,
                     int ls1, int li1, int ls2, int li2);
     void zero_pos();
@@ -170,12 +181,19 @@ public:
     void turn_right();
     void bye_bye_left();
     void bye_bye_right();
-
-    states get_current_state(){return current_state;}
+    states get_current_state();
+    String get_current_state_name();
+    
     void set_current_state(states state){current_state = state;}
     void move_according_state();
     boolean is_last_step_movimet(){return last_step_movimet;}
     void set_last_step_movimet(boolean cstep){ last_step_movimet = cstep;}
+    void set_i2c_address(int address){i2c_address = address;}
+    int get_i2c_address(){return i2c_address;}
+    float get_velocity(){return velocity;}
+    float get_distance(){return distance;}
+    void set_velocity(float v){velocity = v;}
+    void set_distance(float d){distance = d;}
 
 };
 
