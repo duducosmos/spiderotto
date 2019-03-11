@@ -3,23 +3,23 @@
 
 
 Velocity::Velocity(){
-  /*
-  Constructor.
-  Used to measure distance, in cm, and estimate relative mean velocity of
-  objects in front of the HC-SR04 ultrassonic sensor.
-  */
+        /*
+           Constructor.
+           Used to measure distance, in cm, and estimate relative mean velocity of
+           objects in front of the HC-SR04 ultrassonic sensor.
+         */
         start_reads();
 }
 
 Velocity::Velocity(int trigger_pin, int echo_pin){
-  /*
-  Constructor.
-  Used to measure distance, in cm, and estimate relative mean velocity of
-  objects in front of the HC-SR04 ultrassonic sensor.
-  Parameters:
-    trigger_pin: integer. trigger  pin.
-    echo_pin: integet. echo pin.
-  */
+        /*
+           Constructor.
+           Used to measure distance, in cm, and estimate relative mean velocity of
+           objects in front of the HC-SR04 ultrassonic sensor.
+           Parameters:
+           trigger_pin: integer. trigger  pin.
+           echo_pin: integet. echo pin.
+         */
         this->trigger_pin = trigger_pin;
         this->echo_pin = echo_pin;
         pinMode(trigger_pin, OUTPUT);
@@ -35,12 +35,12 @@ void Velocity::start_reads(){
 }
 
 void Velocity::set_pins(int trigger_pin, int echo_pin){
-  /*
-  Used to set trigger and echo pin after to create the Velocity object.
-  Parameters:
-    trigger_pin: integer. trigger  pin.
-    echo_pin: integet. echo pin.
-  */
+        /*
+           Used to set trigger and echo pin after to create the Velocity object.
+           Parameters:
+           trigger_pin: integer. trigger  pin.
+           echo_pin: integet. echo pin.
+         */
         set_echo_pin(echo_pin);
         set_trigger_pin(trigger_pin);
 
@@ -51,20 +51,20 @@ void Velocity::set_pins(int trigger_pin, int echo_pin){
 
 
 double Velocity::measure_distance_cm(){
-  /*
-  Return the  distance obtained from HC-SR04 ultrassonic sensor.
-  Default timeout of the return pulse from trigger is 10000 microseconds.
-  */
-  return measure_distance_cm(10000);
+        /*
+           Return the  distance obtained from HC-SR04 ultrassonic sensor.
+           Default timeout of the return pulse from trigger is 10000 microseconds.
+         */
+        return measure_distance_cm(10000);
 }
 
 double Velocity::measure_distance_cm(int timeout){
-  /*
-  Return the  distance obtained from HC-SR04 ultrassonic sensor.
-  Parameters:
-    timeout: integer - The timeout, in microseconds to wait for the return pulse
-                       from trigger, used by pulseIn function.
-  */
+        /*
+           Return the  distance obtained from HC-SR04 ultrassonic sensor.
+           Parameters:
+           timeout: integer - The timeout, in microseconds to wait for the return pulse
+                             from trigger, used by pulseIn function.
+         */
 
         // Make sure that trigger pin is LOW.
         digitalWrite(trigger_pin, LOW);
@@ -84,9 +84,9 @@ double Velocity::measure_distance_cm(int timeout){
 }
 
 void Velocity::calc_error_dist(){
-  /*
-  Estimate the mean square error of distance and velocity measurement.
-  */
+        /*
+           Estimate the mean square error of distance and velocity measurement.
+         */
         double diffsquare;
         totalDiffSquare = 0;
 
@@ -104,9 +104,9 @@ void Velocity::calc_error_dist(){
 
 
 double Velocity::average_distance_cm(){
-  /*
-  Return the average distance calculated from data of  HC-SR04.
-  */
+        /*
+           Return the average distance calculated from data of  HC-SR04.
+         */
 
         double mesure = measure_distance_cm();
 
@@ -129,11 +129,11 @@ double Velocity::average_distance_cm(){
 }
 
 double Velocity::velocity_cm_per_s(){
-  /*
-  Return the relative mean velocity, in cm per seconds, of objetc in front of
-  HC-SR04. If the HC-SR04 is moving, the velocity represent the relative
-  velocity of the sensor.
-  */
+        /*
+           Return the relative mean velocity, in cm per seconds, of objetc in front of
+           HC-SR04. If the HC-SR04 is moving, the velocity represent the relative
+           velocity of the sensor.
+         */
         if(millis() - t0 > dt) {
 
                 v = s0 - average_distance_cm();
