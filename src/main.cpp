@@ -21,7 +21,6 @@ limitations under the License.
 Legs legs;
 Velocity velocity(5, 4);
 bool turn = false;
-bool bye = false;
 
 void setup() {
     Serial.begin(9600);
@@ -35,30 +34,17 @@ void setup() {
 
 void loop() {
     legs.set_distance(velocity.average_distance_cm());
-    delay(10);
+    Serial.println(velocity.velocity_cm_per_s());
 
     if(legs.get_distance() < 20){
       turn = true;
     }
 
-    /*
-
-    if(bye == true){
-      if(legs.get_current_state() == FORWARD){
-        legs.set_current_state(BYELEFT);
-      }else if(legs.is_last_step_movimet() == true && bye == true){
-        bye = false;
-        turn = true;
-      }
-
-    }
-    */
 
     if(turn == true){
       if(legs.get_current_state() == FORWARD){
         legs.set_current_state(LEFT);
       }else if(legs.is_last_step_movimet() == true){
-        bye = false;
         turn = false;
         legs.set_current_state(FORWARD);
       }
