@@ -108,12 +108,12 @@ double Velocity::average_distance_cm(){
            Return the average distance calculated from data of  HC-SR04.
          */
 
-        double mesure = measure_distance_cm();
+        double measure = measure_distance_cm();
 
-        if(mesure > 0) {
+        if(measure > 0) {
                 totalReads = totalReads - reads[readIndex];
 
-                reads[readIndex] = mesure;
+                reads[readIndex] = measure;
 
                 totalReads = totalReads + reads[readIndex];
                 readIndex += 1;
